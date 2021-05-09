@@ -12,13 +12,13 @@
 ################################################################################
 
 ##CODE FOR: generating stacked bar plots of gut microbiota composition
-# at the bacterial phylum, family, and genus taxonomic level
+# at the bacterial phylum, and family taxonomic levels
 
 source(file="scripts/00_background.R"); #load necessary packages and specifications
 
 
 ################################################################################
-#             1. Load filtered ASV abundance table, ASV taxonomy table and 
+#             1. Load filtered OTU abundance table, OTU taxonomy table and 
 #                         formatted metadata table                 
 ################################################################################
 tax=read.csv("data/00_OTU_taxonomy.txt", header=T, sep="\t");
@@ -161,12 +161,12 @@ fam$taxa=as.character(fam$taxa);
 fam[nrow(fam),1]="Other";
 
 #shorten a few taxon names
-fam$taxa[fam$taxa=="Bacteroidales _unclassified"]="Bacteroidales_unclass"
-fam$taxa[fam$taxa=="Clostridia _unclassified"]="Clostridia_unclass"
-fam$taxa[fam$taxa=="Clostridiales _unclassified"]="Clostridiales_unclass"
-fam$taxa[fam$taxa=="Clostridiales_Incertae_Sedis_XI"]="Clostridiales_IncSed_XI"
-fam$taxa[fam$taxa=="Firmicutes _unclassified"]="Firmicutes_unclass"
-fam$taxa[fam$taxa=="unclassified _unclassified"]="unclass_unclass"
+fam$taxa[fam$taxa=="Bacteroidales _unclassified"]="Bacteroidales_unclass";
+fam$taxa[fam$taxa=="Clostridia _unclassified"]="Clostridia_unclass";
+fam$taxa[fam$taxa=="Clostridiales _unclassified"]="Clostridiales_unclass";
+fam$taxa[fam$taxa=="Clostridiales_Incertae_Sedis_XI"]="Clostridiales_IncSed_XI";
+fam$taxa[fam$taxa=="Firmicutes _unclassified"]="Firmicutes_unclass";
+fam$taxa[fam$taxa=="unclassified _unclassified"]="unclass_unclass";
 
 #melt data frame for ggplot
 fbar<-reshape2::melt(fam, id.vars="taxa",value.name = "abun");
@@ -178,7 +178,7 @@ fam_col=c("#771155", "#AA4488", "#CC99BB", "#114477", "#4477AA", "#77AADD",
           "#117777", "#44AAAA", 
           "#737373","#77CCCC","#117744","#88CCAA", "#777711",  "#DDDD77", 
           "grey","#774411", 
-          "#AA7744", "#DDAA77", "#771122", "#AA4455", "#DD7788","black")
+          "#AA7744", "#DDAA77", "#771122", "#AA4455", "#DD7788","black");
 
 #create plot- ADULTS
 fbar1=fbar[fbar$age_cat=="adult",];
@@ -230,8 +230,9 @@ barfam2=ggplot(data=fbar2,
         axis.text.x=element_blank(),
         strip.text = element_text(size =10, face="bold"));plot(barfam2);
 
+
 ################################################################################
-#             4. save Family level composition barplots                 
+#             5. save Family level composition barplots                 
 ################################################################################
 #combine the two plots and save
 ptwo=arrangeGrob(barfam,barfam2, nrow=2);

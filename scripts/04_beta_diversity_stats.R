@@ -12,13 +12,13 @@
 ################################################################################
 
 ##CODE FOR: calculating distance matrices for PERMANOVA beta-diversity analyses
-#Bray-Curtis (bray), and Jaccard (jac)
+#Bray-Curtis (bray), and Jaccard (jacc)
 
 source(file="scripts/00_background.R"); #load necessary packages and specifications
 
 
 ################################################################################
-#             1. Load filtered OTU table    and sample metadata         
+#             1. Load filtered OTU table and sample metadata         
 ################################################################################
 load("data/01_OTU_table_filtered.Rdata");
 load("data/02_sample_metadata_formatted.Rdata");
@@ -47,7 +47,7 @@ jacc=as.data.frame(as.matrix(jac.dist));
 
 
 ################################################################################
-#         3. subset distance matrices to only adults OR only juveniles
+#         3. subset distance matrices to only adults; to only juveniles
 ################################################################################
 #only retain juvenile samples
 js=meta[meta$age_cat=="juvenile",];
@@ -89,13 +89,14 @@ for(i in 1:4)
 
 #PERMDISP (heterogeneity analysis) - JUVENILES
 bdisper<-with(js, betadisper(as.dist(jbray), bodysite));  #jbray or jjacc
-anova(bdisper)
-TukeyHSD(bdisper)
+anova(bdisper);
+TukeyHSD(bdisper);
 
 #PERMDISP (heterogeneity analysis) - ADULTS
 bdisper<-with(as, betadisper(as.dist(abray), bodysite)); #abray or ajacc
-anova(bdisper)
-TukeyHSD(bdisper)
+anova(bdisper);
+TukeyHSD(bdisper);
+
 
 ################################################################################
 #                     5. conduct PERMANOVA -- MODEL 2
@@ -118,8 +119,8 @@ for(i in 1:6)
                permutations = 999));
 };
 
-##for jaccard, repeat the same code except changes lines 105-106: replace "jbray" 
-#with "jjacc" and in line 108- also change bray to jaccard
+##for jaccard, repeat the same code except changes lines 113-114: replace "jbray" 
+#with "jjacc" and in line 118- also change bray to jaccard
 
 
 ################################################################################
@@ -152,8 +153,8 @@ for(i in 1:6)
                permutations = 999));
 };
 
-##for jaccard, repeat the same code except changes lines 136-137: replace "ajbray" 
-#with "ajjacc"
+##for jaccard, repeat the same code except changes lines 147-148: replace "ajbray" 
+#with "ajjacc" and in line 152 change bray to jaccard
 
 
 ################################################################################
@@ -161,20 +162,20 @@ for(i in 1:6)
 #                     microbiota similarity ~ social rank [juveniles]
 ################################################################################
 #retrieve social rank data
-mr=data.frame(js[, (colnames(js) %in% c("Group","stan.soc.rank"))])
-rownames(mr)=mr$Group; mr$Group=NULL
-mr[mr==0]=0.0000000001
-dist.mat2=vegdist(mr, method="bray")
-dist.mat2b=vegdist(mr, method="jaccard")
+mr=data.frame(js[, (colnames(js) %in% c("Group","stan.soc.rank"))]);
+rownames(mr)=mr$Group; mr$Group=NULL;
+mr[mr==0]=0.0000000001;
+dist.mat2=vegdist(mr, method="bray");
+dist.mat2b=vegdist(mr, method="jaccard");
 
-#run mantel test
-mantel(jbray,dist.mat2, method="spear", permutations=999)
-mantel(jjacc,dist.mat2b, method="spear", permutations=999)
+#run mantel test on bray curtis distances and jaccard distances
+mantel(jbray,dist.mat2, method="spear", permutations=999);
+mantel(jjacc,dist.mat2b, method="spear", permutations=999);
 
 ################################################################################
 #                     8.save distance matrices for plotting later
 ################################################################################
-
+#only Bray-Curtis distances
 dist=save(jbray, abray, ajbray, file="data/04_distances.Rdata");
 
 

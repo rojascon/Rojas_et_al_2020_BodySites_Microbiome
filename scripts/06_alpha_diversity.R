@@ -12,6 +12,7 @@
 ################################################################################
 
 ##CODE FOR: running linear models on gut microbiota alpha-diversity
+# 3 metrics of alpha-diversity: 
 ## Chao1 Richness, Shannon diversity, simpson's index
 
 source(file="scripts/00_background.R"); #load necessary packages and specifications
@@ -30,6 +31,7 @@ alpha=read.table("data/00_OTU_alphadiversity.txt",sep="\t", header=T,
 
 load("data/02_sample_metadata_formatted.Rdata");
 
+
 ################################################################################
 #             2. Append metadata to alpha diversity data        
 ################################################################################
@@ -39,20 +41,21 @@ am=inner_join(alpha[,,], meta[,,], by="Group");
 ama=am[am$age_cat=="adult",];
 amj=am[am$age_cat=="juvenile",];
 
+
 ################################################################################
 #             3. Run linear mixed models
 #     microbiota alpha diversity ~ bodysite + (1| hyenaID)
 ################################################################################
 #adults
-m1=lmer(log(chao)~bodysite + (1|hyenaID), data=ama)
-m2=lmer(npshannon~bodysite + (1|hyenaID), data=ama)
-m3=lmer(simpson~bodysite + (1|hyenaID), data=ama)
+m1=lmer(log(chao)~bodysite + (1|hyenaID), data=ama);
+m2=lmer(npshannon~bodysite + (1|hyenaID), data=ama);
+m3=lmer(simpson~bodysite + (1|hyenaID), data=ama);
 Anova(m1);Anova(m2);Anova(m3);
 
 #juveniles
-m1=lmer(log(chao)~bodysite + (1|hyenaID), data=amj)
-m2=lmer(npshannon~bodysite + (1|hyenaID), data=amj)
-m3=lmer(simpson~bodysite + (1|hyenaID), data=amj)
+m1=lmer(log(chao)~bodysite + (1|hyenaID), data=amj);
+m2=lmer(npshannon~bodysite + (1|hyenaID), data=amj);
+m3=lmer(simpson~bodysite + (1|hyenaID), data=amj);
 Anova(m1);Anova(m2);Anova(m3);
 
 
@@ -60,9 +63,9 @@ Anova(m1);Anova(m2);Anova(m3);
 #             4. Run linear mixed models
 #     microbiota alpha diversity ~ sex + (1| hyenaID) in JUVENILES
 ################################################################################
-m1=lmer(log(chao)~sex+ (1|hyenaID), data=amj)
-m2=lmer(npshannon~sex+ (1|hyenaID), data=amj)
-m3=lmer(simpson~sex + (1|hyenaID), data=amj)
+m1=lmer(log(chao)~sex+ (1|hyenaID), data=amj);
+m2=lmer(npshannon~sex+ (1|hyenaID), data=amj);
+m3=lmer(simpson~sex + (1|hyenaID), data=amj);
 Anova(m1);Anova(m2);Anova(m3);
 
 
@@ -71,17 +74,17 @@ Anova(m1);Anova(m2);Anova(m3);
 #     microbiota alpha diversity ~ ageclass + (1| hyenaID) 
 ################################################################################
 am2=am[am$clan=="Talek",];
-m1=lmer(log(chao)~age_cat+ (1|hyenaID), data=am2)
-m2=lmer(npshannon~age_cat+ (1|hyenaID), data=am2)
-m3=lmer(simpson~age_cat + (1|hyenaID), data=am2)
+m1=lmer(log(chao)~age_cat+ (1|hyenaID), data=am2);
+m2=lmer(npshannon~age_cat+ (1|hyenaID), data=am2);
+m3=lmer(simpson~age_cat + (1|hyenaID), data=am2);
 Anova(m1);Anova(m2);Anova(m3);
 
 
 ################################################################################
-#             6. make plots of alpha diversity ~ bodysite
-#                       ADULTS
+#             6. make boxplots of alpha diversity ~ bodysite
+#                                 ADULTS
 ################################################################################
-mycol=c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02")
+mycol=c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02");
 
 #create plot - chao 1 richness
 abox=ggplot(data=ama, 
@@ -99,7 +102,7 @@ abox=ggplot(data=ama,
         axis.text.x=element_text(size=10, angle = 45, vjust = 0.66),
         strip.text = element_text(size =11, face="bold")); plot(abox);
 
-#create plot - chao 1 richness
+#create plot - shannon diversity
 abox2=ggplot(data=ama, 
             mapping=aes(x=bodysite,y=npshannon, fill=bodysite))+
   geom_boxplot()+
@@ -115,7 +118,7 @@ abox2=ggplot(data=ama,
         axis.text.x=element_text(size=10, angle = 45, vjust = 0.66),
         strip.text = element_text(size =11, face="bold")); plot(abox2);
 
-#create plot - chao 1 richness
+#create plot - simpson's index
 abox3=ggplot(data=ama, 
             mapping=aes(x=bodysite,y=1-simpson, fill=bodysite))+
   geom_boxplot()+
@@ -131,9 +134,10 @@ abox3=ggplot(data=ama,
         axis.text.x=element_text(size=10, angle = 45, vjust = 0.66),
         strip.text = element_text(size =11, face="bold")); plot(abox3);
 
+
 ################################################################################
-#             6. make plots of alpha diversity ~ bodysite
-#                       JUVENILES
+#             6. make boxplots of alpha diversity ~ bodysite
+#                             JUVENILES
 ################################################################################
 #create plot - chao 1 richness
 jbox=ggplot(data=amj, 
@@ -151,7 +155,7 @@ jbox=ggplot(data=amj,
         axis.text.x=element_text(size=10, angle = 45, vjust = 0.66),
         strip.text = element_text(size =11, face="bold")); plot(jbox);
 
-#create plot - chao 1 richness
+#create plot - shannon diversity
 jbox2=ggplot(data=amj, 
              mapping=aes(x=bodysite,y=npshannon, fill=bodysite))+
   geom_boxplot()+
@@ -167,7 +171,7 @@ jbox2=ggplot(data=amj,
         axis.text.x=element_text(size=10, angle = 45, vjust = 0.66),
         strip.text = element_text(size =11, face="bold")); plot(jbox2);
 
-#create plot - chao 1 richness
+#create plot - simpsons index
 jbox3=ggplot(data=amj, 
              mapping=aes(x=bodysite,y=1-simpson, fill=bodysite))+
   geom_boxplot()+

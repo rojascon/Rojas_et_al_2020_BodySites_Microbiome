@@ -11,7 +11,8 @@
 #
 ################################################################################
 
-##CODE FOR: plotting PCoAs based on bray curtis and jaccard distances
+##CODE FOR: plotting PCoAs color coded by bodysite, based on 
+#bray curtis and jaccard distances
 
 source(file="scripts/00_background.R"); #load necessary packages and specifications
 
@@ -24,7 +25,7 @@ load("data/02_sample_metadata_formatted.Rdata");
 
 #abray= adults
 #jbray= juveniles
-#ajbray= adult and juvenile females
+#ajbray= adult females and juvenile females
 
 
 ################################################################################
@@ -150,7 +151,7 @@ twocol=c("#d95f02", "#7570b3");
 
 
 ################################################################################
-#             3. make a PCoA ordinations color-coded by bodysite
+#             5. make a PCoA ordinations color-coded by bodysite
 #                  but nasal and oral separate from the rest
 #                           ADULTS
 ################################################################################
@@ -230,7 +231,7 @@ pcoa4=ggplot(pcoa_met, aes(Axis1, Axis2))+
 
 
 ################################################################################
-#             3. make a PCoA ordinations color-coded by bodysite
+#             6. make a PCoA ordinations color-coded by bodysite
 #                  but nasal and oral separate from the rest
 #                           JUVENILES
 ################################################################################
@@ -310,11 +311,11 @@ pcoa6=ggplot(pcoa_met, aes(Axis1, Axis2))+
 
 
 ################################################################################
-#             3. save PCoA ordinations  from above
-#               (nasal and oral are separate from rest)
+#             7. save PCoA ordinations  from above
+#               (nasal and oral are separate from rest of bodysites)
 ################################################################################
-A=arrangeGrob(pcoa3,pcoa4, nrow=1);
-B=arrangeGrob(pcoa5,pcoa6, nrow=1);
+A=arrangeGrob(pcoa3,pcoa4, nrow=1);  # adult pcoas
+B=arrangeGrob(pcoa5,pcoa6, nrow=1); #juvenile pcoas
 
 ggsave(filename="05_pcoa_bodysites_adults.pdf",
        device="pdf",path="./figures",
@@ -334,7 +335,7 @@ ggsave(filename="05_pcoa_bodysites_juveniles.pdf",
 
 
 ################################################################################
-#             3. make a PCoA ordinations scent gland only
+#             8. make a PCoA ordinations scent gland only
 #                 juvenile females vs juvenile males
 ################################################################################
 jt=meta$Group[(meta$age_cat=="juvenile") & 
@@ -388,7 +389,7 @@ ggsave(filename="05_pcoa_scentgland.pdf",
 
 
 ################################################################################
-#             3. make a PCoA ordinations prepuce and rectum
+#             9. make a PCoA ordinations prepuce and rectum
 #                 adult females vs juvenile females
 ################################################################################
 dfp=meta$Group[(meta$clan=="Talek") & 

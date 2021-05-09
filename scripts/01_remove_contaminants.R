@@ -49,7 +49,7 @@ otu=otu[!otu$Group %in% bad,];
 
 
 ################################################################################
-#             2.  Remove OTUs >1% abundance in control samples 
+#             3.  Remove OTUs >1% abundance in control samples 
 ################################################################################
 #subset df to only control samples
 blanks=c("BEE","BEEE2","BL","BLK1","BS","BSS","H20");
@@ -99,5 +99,3 @@ save(asvf, file="data/01_OTU_table_filtered_withsindoub.Rdata");
 temp=temp[temp$sm>2,];
 asvf=asvf[rownames(asvf) %in% rownames(temp),]
 save(asvf, file="data/01_OTU_table_filtered.Rdata");
-
-gg=asvf[ , order(names(asvf))]
